@@ -17,6 +17,17 @@ window.Waveform = class Waveform
     @context = @canvas.getContext("2d")
     @width  = parseInt @context.canvas.width, 10
     @height = parseInt @context.canvas.height, 10
+    
+    # High DPI Canvas
+    devicePixelRatio = window.devicePixelRatio || 1
+    backingStoreRatio = @context.webkitBackingStorePixelRatio || @context.mozBackingStorePixelRatio || @context.msBackingStorePixelRatio || @context.oBackingStorePixelRatio || @context.backingStorePixelRatio || 1
+    @ratio = devicePixelRatio / backingStoreRatio
+    if devicePixelRatio isnt backingStoreRatio
+      @canvas.width  = @ratio * @width
+      @canvas.height = @ratio * @height
+      @canvas.style.width  = "#{@width}px"
+      @canvas.style.height = "#{@height}px"
+      @context.scale @ratio, @ratio
 
     if options.data
       @update(options)
